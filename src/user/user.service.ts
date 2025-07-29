@@ -14,6 +14,7 @@ import {
   toPaginatedResponse,
 } from '../common/pagination.helper';
 import { getUserSummary } from '../common/summary.helper';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -77,5 +78,26 @@ export class UserService {
     });
 
     return await this.userRepository.save(user);
+  }
+
+  async update(data: UpdateUserDto, id: number): Promise<UserEntity> {
+    const existingUser = await this.userRepository.findOneBy({ id });
+
+    if (!existingUser) {
+      throw new ConflictException('User does not exist');
+    }
+
+    if (data.email && data.email !== existingUser.email) {
+      const userWithEmail = await this.userRepository.findOneBy({
+        email: data.email,
+      });
+      if (userWithEmail && userWithEmail.id !== id) {
+        throw new ConflictException('Email is already in use');
+      }
+    }
+
+    await this.userRepository.update(id, { email: data.email });
+
+    return this.findByIdOrThrow(id);
   }
 }

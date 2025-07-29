@@ -13,6 +13,7 @@ import { PaginatedUserResponseDto, UserResponseDto } from './dto/response/user';
 import { ApiResponse } from '@nestjs/swagger';
 import { getUserSummary } from '../common/summary.helper';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UserController {
@@ -23,7 +24,18 @@ export class UserController {
   async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserResponseDto> {
+    console.log(createUserDto);
     const user = await this.userService.create(createUserDto);
+    return getUserSummary(user);
+  }
+
+  @Post(':id')
+  @ApiResponse({ status: 201, type: UserResponseDto })
+  async updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseDto> {
+    const user = await this.userService.update(updateUserDto, id);
     return getUserSummary(user);
   }
 
