@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CartEntity } from './cart.entity';
+import { OrderEntity } from './order.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -22,6 +23,9 @@ export class UserEntity {
 
   @OneToMany(() => CartEntity, (cart) => cart.user)
   cart: CartEntity[];
+
+  @OneToMany(() => OrderEntity, (order) => order.user)
+  orders: OrderEntity[];
 
   @BeforeInsert()
   @BeforeUpdate()

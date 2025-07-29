@@ -12,7 +12,7 @@ import {
   getObjectPagination,
   toPaginatedResponse,
 } from '../common/pagination.helper';
-import { getCartSummary, getUserSummary } from '../common/summary.helper';
+import { getCartSummary } from '../common/summary.helper';
 import { PaginatedProductResponseDto } from '../product/dto/response/product.dto';
 
 @Injectable()

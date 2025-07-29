@@ -4,6 +4,11 @@ import { ProductEntity } from '../entity/product.entity';
 import { ProductResponseDto } from '../product/dto/response/product.dto';
 import { CartEntity } from '../entity/cart.entity';
 import { CartProductResponseDto } from '../cart/dto/response/cart.dto';
+import { OrderEntity } from '../entity/order.entity';
+import {
+  OrderItemResponseDto,
+  OrderResponseDto,
+} from '../order/dto/response/order.dto';
 
 export function getUserSummary(user: UserEntity): UserResponseDto {
   return {
@@ -33,5 +38,24 @@ export function getCartSummary(cart: CartEntity): CartProductResponseDto {
     quantity: cart.quantity,
     isAvailable: cart.product.isAvailable,
     imageUrl: cart.product.imageUrl,
+  };
+}
+
+export function getOrderSummary(order: OrderEntity): OrderResponseDto {
+  const orderItemsDto: OrderItemResponseDto[] = order.orderItems.map((item) => {
+    return {
+      ...getProductSummary(item.product),
+      quantity: item.quantity,
+      price: Number(item.price),
+    };
+  });
+
+  return {
+    id: order.id,
+    status: order.status,
+    totalAmount: Number(order.totalAmount),
+    orderItems: orderItemsDto,
+    createdAt: order.createdAt,
+    updatedAt: order.updatedAt,
   };
 }
