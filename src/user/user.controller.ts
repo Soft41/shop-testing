@@ -11,6 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { plainToInstance } from 'class-transformer';
 import { PaginatedUserResponseDto, UserResponseDto } from './dto/response/user';
 import { ApiResponse } from '@nestjs/swagger';
+import { getUserSummary } from '../common/summary.helper';
 
 @Controller('users')
 export class UserController {
@@ -22,7 +23,7 @@ export class UserController {
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserResponseDto> {
     const user = await this.userService.create(createUserDto);
-    return plainToInstance(UserResponseDto, user);
+    return getUserSummary(user);
   }
 
   @Get(':id')
@@ -31,13 +32,6 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<UserResponseDto> {
     const user = await this.userService.findByIdOrThrow(id);
-    return plainToInstance(UserResponseDto, user);
-  }
-
-  @Get()
-  @ApiResponse({ status: 201, type: PaginatedUserResponseDto })
-  async findAll(): Promise<PaginatedUserResponseDto> {
-    const user = await this.userService.findByIdOrThrow(1);
-    return plainToInstance(PaginatedUserResponseDto, user);
+    return getUserSummary(user);
   }
 }
