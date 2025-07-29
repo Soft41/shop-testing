@@ -6,6 +6,7 @@ import {
   Body,
   ParseIntPipe,
   Query,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -28,7 +29,7 @@ export class UserController {
     return getUserSummary(user);
   }
 
-  @Post(':id')
+  @Patch(':id')
   @ApiResponse({ status: 200, type: UserResponseDto })
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
