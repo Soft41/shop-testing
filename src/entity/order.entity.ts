@@ -32,7 +32,7 @@ export class OrderEntity {
     scale: 2,
     default: 0,
   })
-  totalAmount: string;
+  totalAmount: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
