@@ -24,10 +24,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  @ApiResponse({
-    status: 201,
-    type: ProductEntity,
-  })
+  @ApiResponse({ status: 201, type: ProductResponseDto })
   async createProduct(
     @Body() dto: CreateProductDto,
   ): Promise<ProductResponseDto> {
