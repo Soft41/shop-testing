@@ -61,7 +61,7 @@ export class UserService {
 
     const data = users.map((user) => getUserSummary(user));
 
-    return toPaginatedResponse(users, totalItems, page, limit);
+    return toPaginatedResponse(data, totalItems, page, limit);
   }
 
   async create(data: CreateUserDto): Promise<UserEntity> {
