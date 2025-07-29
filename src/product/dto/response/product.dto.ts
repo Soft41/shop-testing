@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { PaginatedResponse } from '../../../common/dto/pagination.dto';
 
 export class ProductResponseDto {
   @ApiProperty({ example: 1, description: 'Unique identifier of the product' })
@@ -35,6 +36,6 @@ export class ProductResponseDto {
 }
 
 export class PaginatedProductResponseDto {
-  @ApiProperty({ type: [ProductResponseDto] })
+  @ApiProperty({ type: PaginatedResponse<ProductResponseDto> })
   data: ProductResponseDto[];
 }

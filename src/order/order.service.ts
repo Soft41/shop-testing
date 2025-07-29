@@ -47,13 +47,21 @@ export class OrderService {
       throw new BadRequestException('Cart is empty');
     }
 
-    const unavailableProducts = cartItems
-      .filter((item) => !item.product.isAvailable)
-      .map((item) => item.product.name);
+    const errorProducts: string[] = [];
 
-    if (unavailableProducts.length) {
+    for (const item of cartItems) {
+      const p = item.product;
+
+      console.log(p);
+
+      if (p.quantity < item.quantity && !(p.quantity === 0 && p.isAvailable)) {
+        errorProducts.push(p.name);
+      }
+    }
+
+    if (errorProducts.length) {
       throw new BadRequestException(
-        `Products not available: ${unavailableProducts.join(', ')}`,
+        `Unavailable or insufficient products: ${errorProducts.join(', ')}`,
       );
     }
 
@@ -79,6 +87,18 @@ export class OrderService {
     });
 
     await this.orderItemRepository.save(orderItems);
+
+    for (const item of cartItems) {
+      const p = item.product;
+      if (p.quantity > 0) {
+        p.quantity -= item.quantity;
+        if (p.quantity <= 0) {
+          p.quantity = 0;
+          p.isAvailable = false;
+        }
+        await this.productRepository.save(p);
+      }
+    }
 
     savedOrder.totalAmount = total;
     await this.orderRepository.save(savedOrder);
