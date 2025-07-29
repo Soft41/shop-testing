@@ -24,13 +24,12 @@ export class UserController {
   async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserResponseDto> {
-    console.log(createUserDto);
     const user = await this.userService.create(createUserDto);
     return getUserSummary(user);
   }
 
   @Post(':id')
-  @ApiResponse({ status: 201, type: UserResponseDto })
+  @ApiResponse({ status: 200, type: UserResponseDto })
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -40,7 +39,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @ApiResponse({ status: 201, type: UserResponseDto })
+  @ApiResponse({ status: 200, type: UserResponseDto })
   async getUserById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<UserResponseDto> {
