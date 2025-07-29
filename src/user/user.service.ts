@@ -7,6 +7,13 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from '../entity/user.entity';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { PaginatedUserResponseDto } from './dto/response/user';
+import {
+  getObjectPagination,
+  toPaginatedResponse,
+} from '../common/pagination.helper';
+import { getUserSummary } from '../common/summary.helper';
 
 @Injectable()
 export class UserService {
@@ -37,6 +44,24 @@ export class UserService {
       throw new NotFoundException(`User with email ${email} not found`);
     }
     return user;
+  }
+
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginatedUserResponseDto> {
+    const { page = 1, limit = 20 } = paginationDto;
+
+    const { skip, take } = getObjectPagination(paginationDto);
+
+    const [users, totalItems] = await this.userRepository.findAndCount({
+      skip,
+      take,
+      order: { id: 'ASC' },
+    });
+
+    const data = users.map((user) => getUserSummary(user));
+
+    return toPaginatedResponse(users, totalItems, page, limit);
   }
 
   async create(data: CreateUserDto): Promise<UserEntity> {

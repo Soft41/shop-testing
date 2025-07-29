@@ -10,14 +10,14 @@ export class PaginationDto {
   @IsOptional()
   @Type(() => Number)
   @Min(1, { message: 'Page number must be at least 1' })
-  page?: number = 1;
+  page: number = 1;
 
   @ApiPropertyOptional({ example: 20, description: 'Items per page' })
   @IsOptional()
   @Type(() => Number)
   @IsPositive({ message: 'Limit must be a positive number' })
   @Max(100, { message: 'Items per page max 100' })
-  limit?: number = 20;
+  limit: number = 20;
 }
 
 export class PaginatedResponse<T> {
