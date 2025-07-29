@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { CartEntity } from './cart.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -28,6 +30,9 @@ export class ProductEntity {
 
   @Column({ name: 'image_url', type: 'text', nullable: true })
   imageUrl?: string;
+
+  @OneToMany(() => CartEntity, (cart) => cart.product)
+  carts: CartEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

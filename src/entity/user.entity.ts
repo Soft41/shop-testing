@@ -4,8 +4,10 @@ import {
   Column,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { CartEntity } from './cart.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -17,6 +19,9 @@ export class UserEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(() => CartEntity, (cart) => cart.user)
+  cart: CartEntity[];
 
   @BeforeInsert()
   @BeforeUpdate()
